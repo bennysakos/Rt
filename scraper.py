@@ -1,5 +1,5 @@
 import asyncio
-import aiohttp
+import httpx
 import re
 import time
 from bs4 import BeautifulSoup
@@ -26,19 +26,18 @@ class RTanksScraper:
         }
     
     async def get_session(self):
-        """Get or create aiohttp session"""
-        if self.session is None or self.session.closed:
-            timeout = aiohttp.ClientTimeout(total=30)
-            self.session = aiohttp.ClientSession(
-                timeout=timeout,
+        """Get or create httpx session"""
+        if self.session is None or self.session.is_closed:
+            self.session = httpx.AsyncClient(
+                timeout=30.0,
                 headers=self.headers
             )
         return self.session
     
     async def close_session(self):
-        """Close the aiohttp session"""
-        if self.session and not self.session.closed:
-            await self.session.close()
+        """Close the httpx session"""
+        if self.session and not self.session.is_closed:
+            await self.session.aclose()
     
     def is_cache_valid(self, cache_key: str) -> bool:
         """Check if cached data is still valid"""
@@ -65,14 +64,13 @@ class RTanksScraper:
         """Fetch a web page with error handling"""
         try:
             session = await self.get_session()
-            async with session.get(url) as response:
-                if response.status == 200:
-                    content = await response.text()
-                    return content
-                else:
-                    logger.warning(f"HTTP {response.status} for URL: {url}")
-                    return None
-        except asyncio.TimeoutError:
+            response = await session.get(url)
+            if response.status_code == 200:
+                return response.text
+            else:
+                logger.warning(f"HTTP {response.status_code} for URL: {url}")
+                return None
+        except httpx.TimeoutException:
             logger.error(f"Timeout fetching URL: {url}")
             return None
         except Exception as e:
