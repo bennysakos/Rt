@@ -1,5 +1,5 @@
-discord.py
-aiohttp>=3.8.0,<4.0.0
-beautifulsoup4>=4.11.0,<5.0.0
-flask>=2.3.0,<4.0.0
-requests>=2.28.0,<3.0.0
+discord.py==2.3.2
+aiohttp==3.8.6
+beautifulsoup4==4.12.2
+flask==2.3.3
+requests==2.31.0
