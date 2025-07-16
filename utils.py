@@ -43,7 +43,7 @@ def create_player_embed(player_data: Dict) -> discord.Embed:
     group = player_data.get('group')
     
     if gold_boxes is not None:
-        embed.add_field(name="📦 Gold Boxes", value=f"{gold_boxes:,}", inline=True)
+        embed.add_field(name=":emoji_32: Gold Boxes", value=f"{gold_boxes:,}", inline=True)
     
     if premium is not None:
         status = "✅ Yes" if premium else "❌ No"
