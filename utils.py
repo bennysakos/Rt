@@ -18,10 +18,10 @@ def create_player_embed(player_data: Dict) -> discord.Embed:
     experience = player_data.get('experience')
     
     if rank:
-        embed.add_field(name="🏅 Rank", value=rank, inline=True)
+        embed.add_field(name=" Rank", value=rank, inline=True)
     
     if experience:
-        embed.add_field(name="⭐ Experience", value=f"{experience:,}", inline=True)
+        embed.add_field(name=" Experience", value=f"{experience:,}", inline=True)
     
     # Add combat statistics
     kills = player_data.get('kills')
