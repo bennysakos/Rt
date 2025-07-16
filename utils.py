@@ -35,7 +35,7 @@ def create_player_embed(player_data: Dict) -> discord.Embed:
         embed.add_field(name="☠️ Deaths", value=f"{deaths:,}", inline=True)
     
     if kd_ratio is not None:
-        embed.add_field(name="📊 K/D Ratio", value=f"{kd_ratio:.2f}", inline=True)
+        embed.add_field(name="K/D Ratio", value=f"{kd_ratio:.2f}", inline=True)
     
     # Add other statistics
     gold_boxes = player_data.get('gold_boxes')
