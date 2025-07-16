@@ -46,17 +46,21 @@ RANKING_CATEGORIES = {
 # Self-pinging function to keep bot alive on Render
 def self_ping():
     """Keep the bot alive by pinging itself every 5 minutes"""
-    render_url = os.getenv('RENDER_URL', 'https://your-app-name.onrender.com')
+    render_url = os.getenv('RENDER_URL')
+    
+    # If no RENDER_URL is set, skip self-ping (for initial deployment)
+    if not render_url:
+        logger.info("RENDER_URL not set, skipping self-ping")
+        return
     
     while True:
         try:
             time.sleep(300)  # Wait 5 minutes
-            if render_url != 'https://your-app-name.onrender.com':
-                response = requests.get(f"{render_url}/health")
-                if response.status_code == 200:
-                    logger.info("Self-ping successful")
-                else:
-                    logger.warning(f"Self-ping failed with status {response.status_code}")
+            response = requests.get(f"{render_url}/health")
+            if response.status_code == 200:
+                logger.info("Self-ping successful")
+            else:
+                logger.warning(f"Self-ping failed with status {response.status_code}")
         except Exception as e:
             logger.error(f"Self-ping error: {e}")
             time.sleep(60)  # Wait 1 minute before retrying
