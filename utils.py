@@ -3,10 +3,9 @@ from typing import Dict, List, Optional
 import re
 
 def create_player_embed(player_data: Dict) -> discord.Embed:
-    """Create a Discord embed for player statistics"""
+    """Create a Discord embed for player statistics with activity status"""
     nickname = player_data.get('nickname', 'Unknown')
     
-    # Create embed with player info
     embed = discord.Embed(
         title=f"🎮 {nickname}",
         description=f"RTanks Online Player Statistics",
@@ -18,10 +17,21 @@ def create_player_embed(player_data: Dict) -> discord.Embed:
     experience = player_data.get('experience')
     
     if rank:
-        embed.add_field(name=" Rank", value=rank, inline=True)
+        embed.add_field(name="🪖 Rank", value=rank, inline=True)
     
     if experience:
-        embed.add_field(name=" Experience", value=f"{experience:,}", inline=True)
+        embed.add_field(name="⭐ Experience", value=f"{experience:,}", inline=True)
+    
+    # Add activity status (online/offline)
+    activity = player_data.get('activity', 'Unknown')
+    if activity == 'Online':
+        activity_value = "🟢 Online"
+    elif activity == 'Offline':
+        activity_value = "⚪ Offline"
+    else:
+        activity_value = "❔ Unknown"
+    
+    embed.add_field(name="🟣 Activity", value=activity_value, inline=True)
     
     # Add combat statistics
     kills = player_data.get('kills')
@@ -35,7 +45,7 @@ def create_player_embed(player_data: Dict) -> discord.Embed:
         embed.add_field(name="☠️ Deaths", value=f"{deaths:,}", inline=True)
     
     if kd_ratio is not None:
-        embed.add_field(name="K/D Ratio", value=f"{kd_ratio:.2f}", inline=True)
+        embed.add_field(name="📊 K/D Ratio", value=f"{kd_ratio:.2f}", inline=True)
     
     # Add other statistics
     gold_boxes = player_data.get('gold_boxes')
@@ -43,7 +53,7 @@ def create_player_embed(player_data: Dict) -> discord.Embed:
     group = player_data.get('group')
     
     if gold_boxes is not None:
-        embed.add_field(name=":emoji_32: Gold Boxes", value=f"{gold_boxes:,}", inline=True)
+        embed.add_field(name="🎁 Gold Boxes", value=f"{gold_boxes:,}", inline=True)
     
     if premium is not None:
         status = "✅ Yes" if premium else "❌ No"
@@ -93,13 +103,14 @@ def create_player_embed(player_data: Dict) -> discord.Embed:
             inline=False
         )
     
-    # Add footer
+    # Footer
     embed.set_footer(
         text="Data from RTanks Online Ratings",
         icon_url="https://ratings.ranked-rtanks.online/public/images/logo.png"
     )
     
     return embed
+
 
 def create_leaderboard_embed(category_name: str, leaderboard_data: List[Dict]) -> discord.Embed:
     """Create a Discord embed for leaderboard"""
